@@ -1,0 +1,475 @@
+#!/usr/bin/env python3
+"""
+Script tạo parquet files phong phú cho Scratch Knowledge Graph
+Tạo nhiều entities và relationships để đồ thị đẹp hơn
+"""
+import pandas as pd
+import json
+from pathlib import Path
+import hashlib
+import re
+import openai
+import os
+import logging
+from typing import List, Dict, Any
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Initialize OpenAI client
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY not found in environment variables")
+
+client = openai.OpenAI(api_key=OPENAI_API_KEY)
+
+
+def extract_block_entities_from_wiki(content: str) -> List[Dict[str, Any]]:
+    """Trích xuất các khối lệnh từ Scratch Wiki (Blocks.txt)"""
+    
+    system_prompt = """Trích xuất các khối lệnh Scratch từ nội dung. Trả về JSON thuần túy (không có markdown):
+{"entities": [{"name": "tên khối", "description": "chức năng", "type": "block", "category": "Motion", "importance": "high"}]}"""
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"Trích xuất 20-30 khối lệnh từ:\n{content[:2000]}"}
+            ],
+            temperature=0.2,
+            max_tokens=3000
+        )
+        
+        # Fix: Strip markdown formatting
+        raw_response = response.choices[0].message.content
+        if raw_response.startswith('```json'):
+            raw_response = raw_response[7:]  # Remove ```json
+        if raw_response.endswith('```'):
+            raw_response = raw_response[:-3]  # Remove ```
+        raw_response = raw_response.strip()
+        
+        result = json.loads(raw_response)
+        entities = result.get('entities', [])
+        logger.info(f"✅ Trích xuất {len(entities)} block entities từ Scratch Wiki")
+        return entities
+    except Exception as e:
+        logger.error(f"❌ Lỗi trích xuất blocks: {e}")
+        try:
+            raw_response = response.choices[0].message.content
+            logger.error(f"Raw response: {raw_response[:200]}...")
+        except:
+            pass
+        return []
+
+def extract_educational_entities(content: str, source: str) -> List[Dict[str, Any]]:
+    """Trích xuất khái niệm giáo dục từ Tin học 8"""
+    
+    system_prompt = """Trích xuất các khái niệm Scratch từ nội dung. Trả về JSON thuần túy (không có markdown):
+{"entities": [{"name": "tên", "description": "mô tả", "type": "concept", "category": "basic", "importance": "high"}]}"""
+
+    chunk_size = 1500  # Chia nhỏ hơn
+    overlap = 300
+    all_entities = []
+    
+    for i in range(0, len(content), chunk_size - overlap):
+        chunk = content[i:i + chunk_size]
+        chunk_num = i // (chunk_size - overlap) + 1
+        try:
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": f"Trích xuất 10-15 entities từ:\n{chunk[:1000]}"}
+                ],
+                temperature=0.3,
+                max_tokens=2000
+            )
+            
+            # Fix: Strip markdown formatting
+            raw_response = response.choices[0].message.content
+            if raw_response.startswith('```json'):
+                raw_response = raw_response[7:]  # Remove ```json
+            if raw_response.endswith('```'):
+                raw_response = raw_response[:-3]  # Remove ```
+            raw_response = raw_response.strip()
+            
+            result = json.loads(raw_response)
+            entities = result.get('entities', [])
+            logger.info(f"  Chunk {chunk_num}: {len(entities)} entities")
+            all_entities.extend(entities)
+        except Exception as e:
+            logger.error(f"Error chunk {chunk_num}: {e}")
+            # Debug raw response
+            try:
+                raw_response = response.choices[0].message.content
+                logger.error(f"Raw response: {raw_response[:200]}...")
+            except:
+                pass
+    
+    # Remove duplicates
+    unique = {}
+    for e in all_entities:
+        if e['name'] not in unique:
+            unique[e['name']] = e
+    
+    logger.info(f"✅ Trích xuất {len(unique)} educational entities")
+    return list(unique.values())
+
+def extract_cross_file_relationships(block_entities: List[Dict], edu_entities: List[Dict], content: str) -> List[Dict[str, Any]]:
+    """Tạo relationships gắn kết giữa blocks và educational concepts"""
+    
+    block_names = [e['name'] for e in block_entities[:30]]
+    edu_names = [e['name'] for e in edu_entities[:20]]
+    
+    system_prompt = f"""Bạn là chuyên gia phân tích mối quan hệ giữa khối lệnh Scratch và khái niệm giáo dục.
+
+Block entities (từ Scratch Wiki): {', '.join(block_names[:20])}
+Educational concepts (từ Tin học 8): {', '.join(edu_names[:15])}
+
+Hãy tìm TỐI THIỂU 50-60 relationships gắn kết 2 nguồn, bao gồm:
+1. Block thuộc category nào (Move Steps thuộc Motion)
+2. Block được dùng để làm gì (Move Steps để di chuyển sprite)
+3. Concept được implement bằng block nào (vòng lặp dùng Forever, Repeat)
+4. Block liên quan đến thuộc tính nào (Set X to liên quan đến vị trí)
+
+JSON format (trả về JSON thuần túy, không có markdown):
+{{
+    "relationships": [
+        {{
+            "source": "entity nguồn",
+            "target": "entity đích",
+            "relation": "mô tả mối quan hệ",
+            "type": "belongs_to|implements|controls|relates_to",
+            "strength": "strong|medium|weak"
+        }}
+    ]
+}}"""
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"Tạo relationships:\n\n{content[:2000]}"}
+            ],
+            temperature=0.3,
+            max_tokens=3000
+        )
+        
+        # Fix: Strip markdown formatting
+        raw_response = response.choices[0].message.content
+        if raw_response.startswith('```json'):
+            raw_response = raw_response[7:]  # Remove ```json
+        if raw_response.endswith('```'):
+            raw_response = raw_response[:-3]  # Remove ```
+        raw_response = raw_response.strip()
+        
+        result = json.loads(raw_response)
+        relationships = result.get('relationships', [])
+        logger.info(f"✅ Tạo {len(relationships)} cross-file relationships")
+        return relationships
+    except Exception as e:
+        logger.error(f"❌ Lỗi tạo relationships: {e}")
+        return []
+
+def find_entity_by_name(entities_df, name):
+    
+    # Thử exact match trước
+    exact_match = entities_df[entities_df['title'].str.lower() == name.lower()]
+    if not exact_match.empty:
+        return exact_match.iloc[0]['id']
+    
+    # Thử contains match
+    contains_match = entities_df[entities_df['title'].str.contains(name, case=False, na=False, regex=False)]
+    if not contains_match.empty:
+        return contains_match.iloc[0]['id']
+    
+    # Thử partial match với các từ khóa chính (từ > 3 ký tự)
+    keywords = name.split()
+    for keyword in keywords:
+        if len(keyword) > 3:
+            partial_match = entities_df[entities_df['title'].str.contains(keyword, case=False, na=False, regex=False)]
+            if not partial_match.empty:
+                return partial_match.iloc[0]['id']
+    
+    return None
+
+def create_rich_scratch_parquet_files():
+    """Tạo các parquet files phong phú cho GraphRAG"""
+    
+    # Đọc tất cả file .txt và phân loại
+    input_dir = Path("input")
+    txt_files = list(input_dir.glob("*.txt"))
+    
+    if not txt_files:
+        print("❌ Không tìm thấy file .txt nào trong thư mục input")
+        return
+    
+    print(f"📁 Tìm thấy {len(txt_files)} file .txt:")
+    for file in txt_files:
+        print(f"  - {file.name}")
+    
+    all_content = []
+    file_sources = {}
+    all_llm_entities = []
+    block_entities = []
+    edu_entities = []
+    
+    for file in txt_files:
+        try:
+            content = file.read_text(encoding='utf-8')
+            
+            if "Blocks" in file.name:
+                source = "Scratch Wiki"
+            elif "tin-hoc-8" in file.name or "scratch_clean" in file.name:
+                source = "Tin học 8 - Cánh diều"
+            else:
+                source = "Unknown"
+            
+            file_sources[file.name] = source
+            all_content.append(f"\n\n=== {file.name} ({source}) ===\n\n{content}")
+            print(f"✅ Đã đọc {file.name} ({source}) - {len(content)} ký tự")
+            
+            if "Blocks" in file.name:
+                # File Scratch Wiki - trích xuất blocks
+                logger.info(f"🤖 Trích xuất blocks từ {file.name}...")
+                blocks = extract_block_entities_from_wiki(content)
+                block_entities.extend(blocks)
+                all_llm_entities.extend(blocks)
+            else:
+                # File Tin học 8 - trích xuất educational concepts
+                logger.info(f"🤖 Trích xuất educational concepts từ {file.name}...")
+                edu = extract_educational_entities(content, source)
+                edu_entities.extend(edu)
+                all_llm_entities.extend(edu)
+                
+        except Exception as e:
+            print(f"❌ Lỗi đọc {file.name}: {e}")
+    
+    content = "\n".join(all_content)
+    
+    # Tạo relationships gắn kết
+    logger.info("🤖 Tạo cross-file relationships...")
+    llm_relationships = extract_cross_file_relationships(block_entities, edu_entities, content)
+    
+    print(f"\n📊 Tổng kết trích xuất LLM:")
+    print(f"  - Block entities: {len(block_entities)}")
+    print(f"  - Educational entities: {len(edu_entities)}")
+    print(f"  - Total entities: {len(all_llm_entities)}")
+    print(f"  - Relationships: {len(llm_relationships)}")
+    
+    # Tạo documents.parquet
+    documents_data = {
+        'id': ['doc_1'],
+        'text': [content],
+        'title': ['Scratch Knowledge Base - Tin học 8 + Scratch Wiki'],
+        'creation_date': ['2024-01-01T00:00:00Z'],
+        'metadata': [{
+            'source': 'mixed', 
+            'subject': 'scratch',
+            'files': list(file_sources.keys()),
+            'sources': list(file_sources.values())
+        }]
+    }
+    documents_df = pd.DataFrame(documents_data)
+    documents_df.to_parquet('output/documents.parquet', index=False)
+    print("✅ Created documents.parquet")
+    
+    # Tạo text_units.parquet (chunk text)
+    chunks = []
+    chunk_size = 1000
+    overlap = 200
+    
+    for i in range(0, len(content), chunk_size - overlap):
+        chunk_text = content[i:i + chunk_size]
+        chunk_id = f"tu_{i//chunk_size + 1}"
+        
+        chunks.append({
+            'id': chunk_id,
+            'text': chunk_text,
+            'title': f'Chunk {i//chunk_size + 1}',
+            'document_id': 'doc_1',
+            'metadata': {'chunk_index': i//chunk_size + 1, 'length': len(chunk_text)}
+        })
+    
+    text_units_df = pd.DataFrame(chunks)
+    text_units_df.to_parquet('output/text_units.parquet', index=False)
+    print(f"✅ Created text_units.parquet with {len(chunks)} chunks")
+    
+    # Tạo entities.parquet từ LLM extraction
+    entities_data = []
+    entity_id = 1
+    
+    for entity in all_llm_entities:
+        entities_data.append({
+            'id': f'e_{entity_id}',
+            'title': entity['name'],
+            'description': entity['description'],
+            'type': entity.get('type', 'concept'),
+            'text_unit_ids': [f'tu_{j+1}' for j in range(min(3, len(chunks)))],
+            'metadata': {
+                'category': entity.get('category', 'unknown'),
+                'source': 'Scratch Wiki' if entity.get('type') == 'block' else 'Tin học 8',
+                'importance': entity.get('importance', 'medium'),
+                'extracted_by': 'llm'
+            }
+        })
+        entity_id += 1
+    
+    # Fallback nếu LLM không trích xuất được gì
+    if not entities_data:
+        print("⚠️ LLM không trích xuất được entities, sử dụng dữ liệu fallback...")
+        scratch_concepts_fallback = {
+        'Scratch': 'Ngôn ngữ lập trình trực quan',
+        'lập trình': 'Quá trình tạo ra chương trình máy tính',
+        'khối lệnh': 'Các thành phần cơ bản để tạo chương trình',
+        'sprite': 'Nhân vật hoạt động trong Scratch',
+        'sân khấu': 'Không gian làm việc chính',
+            'stage': 'Sân khấu trong Scratch'
+        }
+        
+        for concept, description in scratch_concepts_fallback.items():
+            entities_data.append({
+                'id': f'e_{entity_id}',
+                'title': concept,
+                'description': description,
+                'type': 'concept',
+                'text_unit_ids': [f'tu_{i+1}' for i in range(min(3, len(chunks)))],
+                'metadata': {
+                    'category': 'fallback',
+                    'source': 'manual',
+                    'importance': 'high' if concept in ['Scratch', 'sprite', 'khối lệnh', 'sân khấu'] else 'medium',
+                    'extracted_by': 'fallback'
+                }
+            })
+            entity_id += 1
+    
+    entities_df = pd.DataFrame(entities_data)
+    entities_df.to_parquet('output/entities.parquet', index=False)
+    print(f"✅ Created entities.parquet with {len(entities_data)} entities")
+    
+    # Tạo relationships.parquet từ LLM extraction
+    relationships_data = []
+    rel_id = 1
+    
+    for rel in llm_relationships:
+        # Sử dụng fuzzy matching để tìm entities
+        source_id = find_entity_by_name(entities_df, rel['source'])
+        target_id = find_entity_by_name(entities_df, rel['target'])
+        
+        if source_id and target_id:
+            relationships_data.append({
+                'id': f'r_{rel_id}',
+                'source': source_id,
+                'target': target_id,
+                'description': rel['relation'],
+                'weight': 0.8,
+                'text_unit_ids': [f'tu_{i+1}' for i in range(min(3, len(chunks)))],
+                'metadata': {
+                    'relation_type': rel.get('type', 'unknown'),
+                    'strength': rel.get('strength', 'medium'),
+                    'extracted_by': 'llm'
+                }
+            })
+            rel_id += 1
+        else:
+            # Log relationships that couldn't be matched
+            logger.warning(f"⚠️  Không tìm thấy entity cho relationship: {rel['source']} -> {rel['target']}")
+    
+    # Fallback relationships nếu LLM không tạo được
+    if not relationships_data:
+        print("⚠️ LLM không tạo được relationships, sử dụng dữ liệu fallback...")
+        rich_relations_fallback = [
+            ('Scratch', 'lập trình', 'Scratch được dùng để lập trình'),
+            ('sprite', 'sân khấu', 'Sprite hoạt động trên sân khấu')
+        ]
+        
+        for source, target, description in rich_relations_fallback:
+            source_entities = entities_df[entities_df['title'].str.contains(source, case=False, na=False)]
+            target_entities = entities_df[entities_df['title'].str.contains(target, case=False, na=False)]
+            
+            if not source_entities.empty and not target_entities.empty:
+                relationships_data.append({
+                    'id': f'r_{rel_id}',
+                    'source': source_entities.iloc[0]['id'],
+                    'target': target_entities.iloc[0]['id'],
+                    'description': description,
+                    'weight': 0.8,
+                    'text_unit_ids': [f'tu_{i+1}' for i in range(min(3, len(chunks)))],
+                    'metadata': {
+                        'relation_type': 'conceptual',
+                        'strength': 'strong',
+                        'extracted_by': 'fallback'
+                    }
+                })
+                rel_id += 1
+    
+    relationships_df = pd.DataFrame(relationships_data)
+    relationships_df.to_parquet('output/relationships.parquet', index=False)
+    print(f"✅ Created relationships.parquet with {len(relationships_data)} relationships")
+    
+    # Tạo communities.parquet phong phú hơn
+    communities_data = {
+        'id': ['c_1', 'c_2', 'c_3', 'c_4'],
+        'level': [1, 1, 2, 2],
+        'entities': [
+            [f'e_{i+1}' for i in range(min(10, len(entities_data)))],  # Basic concepts
+            [f'e_{i+1}' for i in range(min(10, len(entities_data)), min(20, len(entities_data)))],  # Programming concepts
+            [f'e_{i+1}' for i in range(min(20, len(entities_data)), min(30, len(entities_data)))],  # Advanced features
+            [f'e_{i+1}' for i in range(min(30, len(entities_data)), len(entities_data))]  # Educational concepts
+        ],
+        'metadata': [
+            {'name': 'Basic Concepts', 'type': 'basic', 'color': 'blue'},
+            {'name': 'Programming Concepts', 'type': 'programming', 'color': 'green'},
+            {'name': 'Advanced Features', 'type': 'advanced', 'color': 'orange'},
+            {'name': 'Educational Concepts', 'type': 'educational', 'color': 'purple'}
+        ]
+    }
+    communities_df = pd.DataFrame(communities_data)
+    communities_df.to_parquet('output/communities.parquet', index=False)
+    print("✅ Created communities.parquet")
+    
+    # Tạo community_reports.parquet phong phú
+    community_reports_data = {
+        'id': ['cr_1', 'cr_2', 'cr_3', 'cr_4'],
+        'community_id': ['c_1', 'c_2', 'c_3', 'c_4'],
+        'title': ['Báo cáo khái niệm cơ bản', 'Báo cáo khái niệm lập trình', 'Báo cáo tính năng nâng cao', 'Báo cáo khái niệm giáo dục'],
+        'summary': [
+            'Tóm tắt các khái niệm cơ bản nhất trong Scratch như sprite, sân khấu, khối lệnh.',
+            'Tóm tắt các khái niệm lập trình cốt lõi như vòng lặp, điều kiện, biến, hàm.',
+            'Tóm tắt các tính năng nâng cao như clone, pen, sensing, video, music.',
+            'Tóm tắt các khái niệm giáo dục như tư duy logic, giải quyết vấn đề, sáng tạo.'
+        ],
+        'metadata': [
+            {'report_type': 'summary', 'generated_by': 'script'},
+            {'report_type': 'summary', 'generated_by': 'script'},
+            {'report_type': 'summary', 'generated_by': 'script'},
+            {'report_type': 'summary', 'generated_by': 'script'}
+        ]
+    }
+    community_reports_df = pd.DataFrame(community_reports_data)
+    community_reports_df.to_parquet('output/community_reports.parquet', index=False)
+    print("✅ Created community_reports.parquet")
+    
+    print("\n🎉 Tất cả parquet files phong phú đã được tạo thành công!")
+    print("📊 Thống kê:")
+    print(f"  - Documents: {len(documents_df)}")
+    print(f"  - Text Units: {len(text_units_df)}")
+    print(f"  - Entities: {len(entities_df)}")
+    print(f"  - Relationships: {len(relationships_df)}")
+    print(f"  - Communities: {len(communities_df)}")
+    print(f"  - Community Reports: {len(community_reports_df)}")
+    
+    # Hiển thị một số entities và relationships mẫu
+    print("\n🔍 Một số entities mẫu:")
+    for entity in entities_data[:10]:
+        print(f"  - {entity['title']}: {entity['description']}")
+    
+    print("\n🔗 Một số relationships mẫu:")
+    for rel in relationships_data[:10]:
+        print(f"  - {rel['description']}")
+
+if __name__ == "__main__":
+    create_rich_scratch_parquet_files()

@@ -1,0 +1,55 @@
+models:
+  default_chat_model:
+    type: chat
+    auth_type: api_key
+    api_key: ${OPENAI_API_KEY}
+    model_provider: openai
+    model: gpt-4o-mini
+  default_embedding_model:
+    type: embedding
+    auth_type: api_key
+    api_key: ${OPENAI_API_KEY}
+    model_provider: openai
+    model: text-embedding-3-small
+
+input:
+  type: files
+  files:
+    input_dir: input
+    file_extension: .txt
+    recursive: false
+  encoding: utf-8
+
+output:
+  base_dir: output
+
+text_splitting:
+  chunk_overlap: 200
+  chunk_size: 1000
+  strategy: sliding_window
+
+embeddings:
+  text_embedding_model: default_embedding_model
+  batch_size: 50
+
+workflows:
+  - load_input_documents
+  - create_base_text_units
+  - extract_graph
+  - create_final_text_units
+  - generate_text_embeddings
+  - create_communities
+  - create_community_reports
+  - finalize_graph
+
+local_search:
+  response_type: Multiple Paragraphs
+  community_level: 2
+
+global_search:
+  response_type: Multiple Paragraphs
+  community_level: 2
+  dynamic_community_selection: true
+
+
+

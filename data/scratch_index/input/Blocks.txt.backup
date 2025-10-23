@@ -1,0 +1,501 @@
+source: https://en.scratch-wiki.info/w/index.php?title=Blocks&action=edit
+{{April Fools}}{{featured|July|2010}}{{External Programs}}{{other version|3.0|2.0|1.4}}{{about|pieces of code used in the editor||Blocks (disambiguation)| and |Program (disambiguation)}}
+{{Block Frame|blocks=<sb>move (10) steps</sb>|caption=The [[Move () Steps]] block.}}{{Block Frame|blocks=<scratchblocks>
+when gf clicked
+move (10) steps
+say [Hello!] for (2) seconds
+forever
+if <<(score::variables) \> (50)> and <touching (mouse-pointer v)?>> then
+dance for (2) seconds::custom
+broadcast (Win v)
+play sound (Cheer v) until done
+repeat (100)
+beep note (pitch::variables) for (0.1) secs
+change [pitch v] by (1)
+</scratchblocks>|caption=An example of a [[script]].}}
+'''Blocks''' are puzzle-piece shapes that are used to create code in [[Scratch]]. The blocks connect to each other vertically like a jigsaw puzzle, where each block type ([[hat]], [[stack]], [[reporter]], [[boolean]], or [[cap]]) has its own shape and its own slot shape for it to be inserted into. Series of connected blocks are called [[script]]s.
+
+Blocks are often easier to work with than text-based programming, as blocks do not need to be memorized like typed commands and syntax errors cannot occur. However, text-based programming is more flexible, as text can easily be edited without having to drag another block into the editor.
+
+There are ten categories of blocks: [[Motion Blocks|Motion]], [[Looks Blocks|Looks]], [[Sound Blocks|Sound]], [[Event Blocks|Event]], [[Control Blocks|Control]], [[Sensing Blocks|Sensing]], [[Operators Blocks|Operators]],   [[Variables Blocks|Variables]], [[List Blocks|List]], and [[Custom Blocks|My Blocks]]. The list blocks are shown under the Variables Blocks.
+
+In total, there are eight [[Hat Block]]s, five [[C Block]]s, 34 [[Reporter Block]]s, 14 [[Boolean Block]]s, two [[Cap Block]]s and 62 [[Stack Block]]s, for a total of 125 blocks. ''(Block numbers do not include extensions.)''
+
+== Block Shapes ==
+There are six different block shapes: [[Hat Block|Hat]], [[Stack Block|Stack]], [[Boolean Block|Boolean]], [[Reporter Block|Reporter]], [[C Block|C]] and [[Cap Block|Cap]].
+
+=== Hat blocks ===
+{{main|Hat Block}}
+[[File:Hat block grey.svg|thumb|100x100px|The shape of a Hat block.]]
+'''Hat blocks''' are the blocks that start every script. They are shaped with a rounded top and a bump at the bottom {{-}} this is so that a user can only place blocks below them. There are eight Hat blocks in the Scratch editor, six of which are in the [[Events Blocks|Events]] category, one in the [[Control Blocks|Control]] category, and one in the category [[My Blocks]] (if one has created one custom block).
+
+=== Stack blocks ===
+[[File:Stack block grey.svg|thumb|left|100x100px|The shape of a Stack block.]]
+{{main|Stack Block}}
+'''Stack blocks''' are the blocks that perform specific commands. They are shaped with a notch at the top and a bump on the bottom {{-}} this is so blocks can be placed above and below them. There are 62 Stack blocks {{-}} the most common block shape.
+
+=== Boolean blocks ===
+[[File:Boolean block grey.svg|thumb|100x100px|The shape of a Boolean block.]]
+{{main|Boolean Block}}
+'''Boolean blocks''' are blocks that act like conditions. They have an elongated hexagonal shape. Boolean blocks can hold and report "true" or "false" values. These blocks are inserted into holes of other blocks with the same shape or the shape of a reporter block (see below).
+
+=== Reporter blocks ===
+[[File:Reporter block grey.svg|thumb|left|100x100px|The shape of a Reporter block.]]
+{{main|Reporter Block}}
+'''Reporter blocks''' are blocks that act as the values. They are shaped with rounded edges. Reporter blocks can hold numbers and [[string]]s. They can also report a [[variable]]. Theoretically, there are an infinite number of Reporter blocks that can be made for each variable and list. These blocks are inserted into holes of other blocks with the same shape.
+
+=== C blocks ===
+[[File:C  block grey.svg|thumb|100x100px|The shape of a C block.]]
+{{main|C Block}}
+'''C blocks''' are blocks that take the shape of "C's". Also known as "Wrap blocks", these blocks loop the blocks within the Cs or check if a condition is true. There are five C blocks, and they can be found in the Control category. C blocks can be bumped at the bottom, allowing blocks to be attached below, or capped, which does not allow any blocks to be placed below.
+
+=== Cap blocks ===
+[[File:Cap block grey.svg|thumb|left|100x100px|The shape of a Cap block.]]
+{{main|Cap Block}}
+'''Cap blocks''' are the blocks that end scripts. They are shaped with a notch at the top and a flat bottom {{-}} this is so blocks cannot be placed below them. There are two Cap blocks, which can both be found in the Control category.
+
+== Block Categories ==
+{{main|Block Categories}}
+[[File:Block categories with all extensions.png|thumb|70px|The block categories.]]
+Blocks are divided into 9 categories: [[Motion Blocks|Motion]], [[Looks Blocks|Looks]], [[Sound Blocks|Sound]], [[Events Blocks|Events]], [[Control Blocks|Control]], [[Sensing Blocks|Sensing]], [[Operators Blocks|Operators]], [[Variables Blocks|Variables]], and [[My Blocks]]. Each category has blocks that perform a different function. There are also 11 [[extension]] categories that can be added to the block list by selecting them, and 3 [[Raspberry Pi]] extensions that are not available on other versions of Scratch. The block categories appear in the categories to the left of the [[Block Palette]], and extensions will appear there when they are added.
+
+== List of Blocks ==
+There are 124 normal blocks in Scratch 3.0 (not including extensions or [[Hidden Blocks|hidden blocks]]). There are 80 extension blocks (not including Raspberry Pi blocks). There are also many [[Hidden Blocks]] that cannot be accessed normally.
+
+The following is a list of said 124 blocks, divided and listed based on category:
+
+=== Motion blocks ===
+{{main|Motion Blocks}}
+'''Motion blocks''' are the blocks that control a [[Sprite]]'s movement. There are 18 Motion blocks in Scratch 3.0. The stage has no motion blocks, as it cannot move.
+
+Motion has 15 stack blocks and 3 reporter blocks:
+
+* [[Move () Steps|<sb>move () steps</sb>]] {{-}} Moves the sprite forward the number of steps in the direction the sprite is facing.
+* [[Turn Right () Degrees|<sb>turn cw () degrees</sb>]] {{-}} Turns the sprite (clockwise) the specified number of degrees.
+* [[Turn Left () Degrees|<sb>turn ccw () degrees</sb>]] {{-}} Turns the sprite (counter-clockwise) the specified number of degrees.
+* [[Go to () (Motion block)|<sb>go to ( v)</sb>]] {{-}} Moves the sprite to the mouse-pointer, a random position, or another sprite.
+* [[Go to X: () Y: ()|<sb>go to x: () y: ()</sb>]] {{-}} Moves the sprite to the specified X and Y position.
+* [[Glide () Secs to ()|<sb>glide () secs to ( v)</sb>]] {{-}} Glides the sprite to the mouse-pointer, a random position, or another sprite, taking as long as the specified amount of time
+* [[Glide () Secs to X: () Y: ()|<sb>glide () secs to x: () y: ()</sb>]] {{-}} Glides the sprite to the location, taking as long as the specified amount of time.
+* [[Point in Direction ()|<sb>point in direction ()</sb>]] {{-}} Points the sprite in the direction.
+* [[Point Towards ()|<sb>point towards ( v)</sb>]] {{-}} Points the sprite towards the mouse-pointer or another sprite.
+* [[Change X by ()|<sb>change x by ()</sb>]] {{-}} Changes the sprite's X position by the number.
+* [[Set X to ()|<sb>set x to ()</sb>]] {{-}} Sets the sprite's X position to the specified number.
+* [[Change Y by ()|<sb>change y by ()</sb>]] {{-}} Changes the sprite's Y position by the specified number.
+* [[Set Y to ()|<sb>set y to ()</sb>]] {{-}} Sets the sprite's Y position to the number.
+* [[If on Edge, Bounce|<sb>if on edge, bounce</sb>]] {{-}} If touching the edge of the screen, the sprite's direction flips over
+* [[Set Rotation Style ()|<sb>set rotation style [ v]</sb>]] {{-}} Sets the rotation style of a sprite.
+* [[X Position (block)|<sb>(x position)</sb>]] {{-}} The X position of the sprite.
+* [[Y Position (block)|<sb>(y position)</sb>]] {{-}} The Y position of the sprite.
+* [[Direction (block)|<sb>(direction)</sb>]] {{-}} The direction of the sprite.
+
+=== Looks blocks ===
+{{main|Looks Blocks}}
+'''Looks blocks''' are the blocks that control how a sprite looks. There are 21 Looks blocks in Scratch 3.0. Only seven of these are available to the Stage, one of which is exclusive to the Stage and not available to sprites.
+
+Looks has 18 stack blocks and 3 reporter blocks:
+
+* [[Say () for () Seconds|<sb>say [] for () seconds</sb>]] {{-}} A speech bubble appears over the sprite and stays for the specified amount of time.
+* [[Say ()|<sb>say []</sb>]] {{-}} A speech bubble appears over the sprite and will only go away if the sprite says or thinks something else.
+* [[Think () for () Seconds|<sb>think [] for () seconds</sb>]] {{-}} A thought bubble appears over the sprite and stays for the specified amount of time.
+* [[Think ()|<sb>think []</sb>]] {{-}} A thought bubble appears over the sprite and will only go away if the sprite says or thinks something else.
+* [[Switch Costume to ()|<sb>switch costume to ( v)</sb>]] {{-}} Changes the sprite's [[costume]] to the specified one.
+* [[Next Costume|<sb>next costume</sb>]] {{-}} Changes the sprite's costume to the next one in the costume list.
+* [[Switch Backdrop to ()|<sb>switch backdrop to ( v)</sb>]] {{-}} Changes the stage's backdrop to the specified one.
+* [[Switch Backdrop to () and Wait|<sb>switch backdrop to ( v) and wait</sb>]] {{-}} Like the Switch to Backdrop () block, though it waits until all of the blocks triggered by this have completed. (Stage only)
+* [[Next Backdrop|<sb>next backdrop</sb>]] {{-}} Changes the stage's backdrop to the next one in the costume list
+* [[Change Size by ()|<sb>change size by ()</sb>]] {{-}} Changes the sprite's size by the number.
+* [[Set Size to ()%|<sb>set size to ()%</sb>]] {{-}} Sets the sprite's size to the number.
+* [[Change () Effect by () (Looks block)|<sb>change [ v] effect by ()</sb>]] {{-}} Changes the specified effect by the number.
+* [[Set () Effect to () (Looks block)|<sb>set [ v] effect to ()</sb>]] {{-}} Sets the specified effect to the number.
+* [[Clear Graphic Effects|<sb>clear graphic effects</sb>]] {{-}} Clears all graphic effects on the sprite.
+* [[Show|<sb>show</sb>]] {{-}} Shows the sprite.
+* [[Hide|<sb>hide</sb>]] {{-}} Hides the sprite.
+* [[Go to () Layer|<sb>go to [ v] layer</sb>]] {{-}} Puts a sprite in the front or back.
+* [[Go () () Layers|<sb>go [ v] () layers</sb>]] {{-}} Changes the sprite's layer value by the number.
+* [[Costume ()|<sb>(costume [ v])</sb>]] {{-}} The number or name of the sprite current costume in the list.
+* [[Backdrop ()|<sb>(backdrop [ v])</sb>]] {{-}} The number or name of the Stage's current backdrop in the list.
+* [[Size (block)|<sb>(size)</sb>]] {{-}} The sprite's size.
+
+=== Sound blocks ===
+{{main|Sound Blocks}}
+'''Sound blocks''' are the blocks that control sound. There are 9 Sound blocks in Scratch 3.0. The note blocks in 3.0 have been moved to the [[Music Extension]].
+
+Sound has 8 stack blocks and 1 reporter block:
+
+* [[Play Sound () Until Done|<sb>play sound ( v) until done</sb>]] {{-}} Plays a sound and pauses the script until it finishes.
+* [[Start Sound ()|<sb>start sound ( v)</sb>]] {{-}} Plays a sound without pausing the script.
+* [[Stop All Sounds|<sb>stop all sounds</sb>]] {{-}} Stops all playing sounds.
+* [[Change () Effect by () (Sound block)|<sb>change [pitch v] effect by ()</sb>]] {{-}} Change the pan left/right or pitch by the number.
+* [[Set () Effect to () (Sound block)|<sb>set [pan left/right v] effect to ()</sb>]] {{-}} Set the pan left/right or pitch to the number.
+* [[Clear Sound Effects|<sb>clear sound effects</sb>]] {{-}} Clears any sound effects currently in place.
+* [[Change Volume by ()|<sb>change volume by ()</sb>]] {{-}} Changes the volume by the number.
+* [[Set Volume to ()%|<sb>set volume to ()%</sb>]] {{-}} Sets the volume to the number.
+* [[Volume (block)|<sb>(volume)</sb>]] {{-}} The volume.
+
+=== Events blocks ===
+{{main|Events Blocks}}
+'''Events blocks''' are blocks that control events and the triggering of scripts. There are 8 Event blocks in Scratch 3.0.
+
+Events has 6 hat blocks and 2 stack blocks:
+
+* [[When Green Flag Clicked|<sb>when green flag clicked</sb>]] {{-}} When the flag is clicked, the script activates.
+* [[When () Key Pressed (Events block)|<sb>when [ v] key pressed</sb>]] {{-}} When the specified key is pressed, the script activates. The event will only be triggered again after the event is released.
+* [[When This Sprite Clicked|<sb>when this sprite clicked</sb>]] {{-}} When the sprite is clicked, the script activates.
+* [[When Backdrop Switches to ()|<sb>when backdrop switches to [ v]</sb>]] {{-}} When the backdrop switches to the one chosen, the script activates.
+* [[When () is greater than ()|<sb>when [ v] > ()</sb>]] {{-}} When the first value is greater than the second value, the script activates.
+* [[When I Receive ()|<sb>when I receive [ v]</sb>]] {{-}} When the broadcast is received, the script activates.
+* [[Broadcast ()|<sb>broadcast ( v)</sb>]] {{-}} Sends a broadcast throughout the Scratch program, activating When I Receive () blocks that are set to that broadcast.
+* [[Broadcast () and Wait|<sb>broadcast ( v) and wait</sb>]] {{-}} Like the Broadcast () block, but pauses the script until all scripts activated by the broadcast are completed.
+
+=== Control blocks ===
+{{main|Control Blocks}}
+'''Control blocks''' are the blocks that control scripts. There are 11 Control blocks in Scratch 3.0.
+
+Control has 1 hat block, 3 stack blocks, 5 C blocks and 2 cap blocks:
+
+* [[Wait () Seconds|<sb>wait () seconds</sb>]] {{-}} Pauses the script for the amount of time.
+* [[Repeat ()|<sb>repeat ()</sb>]] {{-}} A loop that repeats the specified number of times.
+* [[Forever|<sb>forever</sb>]] {{-}} A loop that will never end unless the [[Stop Sign]] is pressed or the script is stopped by the [[Stop ()]] block.
+* [[If () Then|<sb>if <> then</sb>]] {{-}} Checks the condition so that if the condition is true, the blocks inside it will activate.
+* [[If () Then, Else|<scratchblocks>if <> then
+else</scratchblocks>]]&#x2514;{{-}} Checks the condition so that if the condition is true, the blocks inside the first C will activate and if the condition is false, the blocks inside the second C will activate.
+* [[Wait Until ()|<sb>wait until <></sb>]] {{-}} Pauses the script until the condition is true.
+* [[Repeat Until ()|<sb>repeat until <></sb>]] {{-}} A loop that will stop once the condition is true.
+* [[Stop ()|<sb>stop [ v]</sb>]] {{-}} Stops the scripts chosen through the drop-down menu. Can also be a stack block when "other scripts in this sprite" is chosen.
+* [[When I Start as a Clone|<sb>when I start as a clone</sb>]] (sprites only)  {{-}} This hat block is triggered whenever a clone is created, and will only be run by that clone.
+* [[Create Clone of ()|<sb>create clone of ( v)</sb>]] {{-}} Creates the specified clone.
+* [[Delete This Clone|<sb>delete this clone</sb>]] (sprites only) {{-}} Deletes a clone.
+
+=== Sensing blocks ===
+{{main|Sensing Blocks}}
+'''Sensing blocks''' are the blocks that detect things. There are 18 Sensing blocks in Scratch 3.0.
+
+Sensing has 3 stack blocks, 5 boolean blocks, and 10 reporter blocks:
+
+* [[Touching ()?|<sb><touching ( v)?></sb>]] {{-}} The condition for checking if the sprite is touching the mouse-pointer or another sprite.
+* [[Touching Color ()?|<sb><touching color [#0000ff]?></sb>]] {{-}} The condition for checking if the sprite is touching a specific color.
+* [[Color () is Touching ()?|<sb><color [#0000ff] is touching [#ff0000]?></sb>]] {{-}} The condition for checking if a color on the sprite is touching a specific color.
+* [[Distance to ()|<sb>(distance to ( v))</sb>]] {{-}} The distance from the sprite to the mouse-pointer or another sprite.
+* [[Ask () and Wait|<sb>ask [] and wait</sb>]] {{-}} An input box appears {{-}}  a value is typed in and it stores the value in the <sb>(answer)</sb> variable.
+* [[Answer (block)|<sb>(answer)</sb>]] {{-}} The most recent input with the Ask () And Wait block.
+* [[Key () Pressed?|<sb><key ( v) pressed?></sb>]] {{-}} The condition for checking if the specified key is being pressed.
+* [[Mouse Down?|<sb><mouse down?></sb>]] {{-}} The condition for checking if the mouse is down.
+* [[Mouse X|<sb>(mouse x)</sb>]] {{-}} The mouse-pointer's X position.
+* [[Mouse Y|<sb>(mouse y)</sb>]] {{-}} The  mouse-pointer's Y position.
+* [[Set Drag Mode ()|<sb>set drag mode [ v]</sb>]] {{-}} Sets the sprite to draggable or not draggable.
+* [[Loudness (block)|<sb>(loudness)</sb>]] {{-}} How loud the noise is that the microphone is sensing.
+* [[Timer (block)|<sb>(timer)</sb>]] {{-}} How much time has passed since the Scratch program was opened or the timer reset.
+* [[Reset Timer|<sb>reset timer</sb>]] {{-}} Resets the timer.
+* [[() of () (Sensing block)|<sb>([ v] of ( v))</sb>]] {{-}} The X position, Y position, direction, costume, size or volume of the Stage or a sprite.
+* [[Current ()|<sb>(current [ v])</sb>]] {{-}} The specified time unit selected.
+* [[Days Since 2000|<sb>(days since 2000)</sb>]] {{-}} The number of days since 2000.
+* [[Username (block)|<sb>(username)</sb>]] {{-}} The username of a user.
+
+=== Operators blocks ===
+{{main|Operators Blocks}}
+'''Operators blocks''' are the blocks that perform math functions and string handling. There are 18 Operators blocks in Scratch 3.0.
+
+Operators has 7 boolean blocks and 11 reporter blocks:
+
+* [[() + ()|<sb>(() + ())</sb>]] {{-}} The value of the addition.
+* [[() - ()|<sb>(() - ())</sb>]] {{-}} The value of the subtraction.
+* [[() * ()|<sb>(() * ())</sb>]] {{-}} The value of the multiplication.
+* [[() / ()|<sb>(() / ())</sb>]] {{-}} The value of the division.
+* [[Pick Random () to ()|<sb>(pick random () to ())</sb>]] {{-}} Picks a random number between the two limits.
+* [[() is greater than ()|<sb><[] > []></sb>]] {{-}} The condition for checking if a value is greater than the other.
+* [[() is less than ()|<sb><[] < []></sb>]] {{-}} The condition for checking if a value is less than the other.
+* [[() = ()|<sb><[] = []></sb>]] {{-}} The condition for checking if two values are equal.
+* [[() and ()|<sb><<> and <>></sb>]] {{-}} True if both conditions are true.
+* [[() or ()|<sb><<> or <>></sb>]] {{-}} True if either condition is true.
+* [[Not ()|<sb><not <>></sb>]] {{-}} Makes the condition checked if it is false, not true, or true, not false.
+* [[Join ()()|<sb>(join [] [])</sb>]] {{-}} The two values put right next to each other.
+* [[Letter () of ()|<sb>(letter () of [])</sb>]] {{-}} The specified character of the value.
+* [[Length of () (Operators block)|<sb>(length of [])</sb>]] {{-}} The length of the value.
+* [[() Contains ()? (Operators block)|<sb><[] contains []?></sb>]] Checks if the first parameter's text contains the second parameter's text {{-}} if it does, the block returns true.
+* [[() Mod ()|<sb>(() mod ())</sb>]] {{-}} The remainder of the division.
+* [[Round ()|<sb>(round ())</sb>]] {{-}} Rounds the value to the nearest whole number.
+* [[() of () (Operators block)|<sb>([abs v] of ())</sb>]] {{-}} The absolute value (abs), square root (sqrt), sine (sin), cosine (cos), tangent (tan), asine (asin), acosine (acos), atangent (atan), natural logarithm (ln), logarithm (log), exponential function (e^), or base 10 exponential function (10^) of a specified value.
+
+Right-clicking some of the blocks will yield more choices of its type.
+
+=== Variables blocks ===
+{{main|Variables Blocks}}
+'''Variables blocks''' are the blocks that hold [[variable]]s and [[list]]s. There are 5 Variables blocks and 12 list blocks in Scratch 3.0.
+
+Variables has 4 stack blocks and one reporter block for each variable created:
+
+* [[() (Variables block)|<sb>(variable)</sb>]] {{-}} The variable's value.
+* [[Set () to ()|<sb>set [ v] to ()</sb>]] {{-}} Sets the specified variable to the number.
+* [[Change () by ()|<sb>change [ v] by ()</sb>]] {{-}} Changes the specified variable by the number.
+* [[Show Variable ()|<sb>show variable [ v]</sb>]] {{-}} Shows the variable's [[Stage Monitor]].
+* [[Hide Variable ()|<sb>hide variable [ v]</sb>]] {{-}} Hides the variable's Stage Monitor.
+
+==== List blocks ====
+{{main|List Blocks}}
+'''List blocks''' are the blocks that manage [[list]]s. They are located in the Variables category and are not found in the bar to the left. There are 12 List blocks in Scratch 3.0.
+
+List has 7 stack blocks, 3 reporter blocks (one additional reporter block for each list created), and 1 boolean block:
+
+* [[() (List block)|<sb>(list::list)</sb>]] {{-}} All items contained in the list.
+* [[Add () to ()|<sb>add [] to [ v]</sb>]] {{-}} Adds an item to the list (the item goes at the bottom of the list of items) with the specified content in it.
+* [[Delete () of ()|<sb>delete () of [ v]</sb>]] {{-}} Deletes the item of the list.
+* [[Delete All of ()|<sb>delete all of [ v]</sb>]] {{-}} Deletes all items of the list.
+* [[Insert () at () of ()|<sb>insert [] at () of [ v]</sb>]] {{-}} Adds an item to the list (the item goes where it is specified in the list of items) with the specified content in it.
+* [[Replace Item () of () with ()|<sb>replace item () of [ v] with []</sb>]] {{-}} Replaces the item's content with the specified content.
+* [[Item () of ()|<sb>(item () of [ v])</sb>]] {{-}} The item's value.
+* [[Item Number of () in ()|<sb>(item # of [] in [ v])</sb>]] {{-}} Reports the index in a list where an item first appears.
+* [[Length of () (List block)|<sb>(length of [ v])</sb>]] {{-}} How many items there are in the specified list.
+* [[() Contains ()? (List block)|<sb><[ v] contains []?></sb>]] {{-}} The condition for checking if an item's content is the specified text.
+* [[Show List ()|<sb>show list [ v]</sb>]] {{-}} Shows a list.
+* [[Hide List ()|<sb>hide list [ v]</sb>]] {{-}} Hides a list.
+
+=== My Blocks ===
+{{main|My Blocks}}
+'''My Blocks''' (also known as Custom Blocks), are user-made custom blocks. There are 4 different, unique kinds of My Blocks in Scratch 3.0.
+Scratch 3.0 has the following My Blocks Hat block:
+* <sb>define custom block</sb> {{-}} Defines a custom block.
+
+Scratch 3.0 has the following My Blocks Stack block:
+* <sb>custom block:: custom</sb> {{-}} A custom block.
+
+Scratch 3.0 has the following My Blocks Boolean block:
+* <sb><custom boolean::custom></sb> {{-}} A true/false value.
+
+Scratch 3.0 has the following My Blocks Reporter block:
+* <sb>(custom reporter::custom)</sb> {{-}} An input for a value, set by the definition My Block.
+
+== Extensions ==
+{{main|Extension}}
+Scratch 3.0 has a number of extensions that can be added to the block list. To choose an extension, press the purple button below the regular block sections.
+
+=== Music Extension ===
+{{main|Music Extension}}
+The Music extension allows one to play [[MIDI Notes]] with different instruments. There are seven Music extension blocks in Scratch 3.0.
+
+Scratch 3.0 has six Music stack blocks and one Music reporter block:
+* [[Play Drum () for () Beats|<sb>play drum ( v) for (0.25) beats</sb>]]
+* [[Rest for () Beats|<sb>rest for () beats</sb>]]
+* [[Play Note () for () Beats|<sb>play note () for () beats</sb>]]
+* [[Set Instrument to ()|<sb>set instrument to ( v)</sb>]]
+* [[Set Tempo to ()|<sb>set tempo to ()</sb>]]
+* [[Change Tempo by ()|<sb>change tempo by ()</sb>]]
+* [[Tempo (block)|<sb>tempo::reporter</sb>]]
+
+=== Pen Extension ===
+{{main|Pen Extension}}
+The Pen extension allows one to draw on the stage with the [[pen]]. Scratch 3.0 has nine Pen stack blocks:
+* [[Erase All|<sb>erase all</sb>]]
+* [[Stamp|<sb>stamp</sb>]]
+* [[Pen Up|<sb>pen up</sb>]]
+* [[Pen Down|<sb>pen down</sb>]]
+* [[Set Pen Color to () (color input block)|<sb>set pen color to [#cd4f39]</sb>]]
+* [[Change Pen () by ()|<sb>change pen ( v) by ()</sb>]]
+* [[Set Pen () to ()|<sb>set pen ( v) to ()</sb>]]
+* [[Change Pen Size by ()|<sb>change pen size by ()</sb>]]
+* [[Set Pen Size to ()|<sb>set pen size to ()</sb>]]
+
+=== Video Sensing Extension ===
+{{main|Video Sensing Extension}}
+The Video Sensing extension lets projects interact with a webcam. There are four Video Sensing blocks in Scratch 3.0.
+
+Scratch 3.0 has one Video Sensing hat block, one reporter block, and two stack blocks:
+* [[When Video Motion is greater than ()|<sb>when video motion > ()</sb>]]
+* [[Video () on ()|<sb>video ( v) on ( v)</sb>]]
+* [[Turn Video ()|<sb>turn video ( v)</sb>]]
+* [[Set Video Transparency to ()|<sb>set video transparency to ()
+</sb>]]
+
+=== Face Sensing Extension===
+{{main|Face Sensing Extension}}
+The Face Sensing extension lets projects sense faces from a webcam. There are nine Face Sensing blocks in Scratch 3.0.
+
+There are three hat blocks, two reporter blocks, one boolean block, and three stack blocks:
+* [[File:Go to () (face sensing).svg|128x128px|link=Go_to_()_(Face_Sensing_block)]]
+* [[File:Point in direction of face tilt.svg|174x174px|link=Point in direction of face tilt]]
+* [[File:Set size to face size.svg|142x142px|link=Set size to face size]]
+* [[File:When face tilts ().svg|164x164px|link=When face tilts ()]]
+* [[File:When this sprite touches a ().svg|228x228px|link=When this sprite touches a () (Face Sensing Block]]
+* [[File:When a face is detected.svg|160x160px|link=When a face is detected]]
+* [[File:A face is detected.svg|155x155px|link=A face is detected?]]
+* [[File:Face tilt block.png|88x88px|link=Face tilt]]
+* [[File:Face size.svg|97x97px|link=Face size]]
+
+=== Text to Speech Extension ===
+{{main|Text to Speech Extension}}
+The Text to Speech extension allows text to be read aloud. Scratch 3.0 has three Text to Speech stack blocks:
+* [[Speak ()|<sb>speak ()</sb>]]
+* [[Set Voice to ()|<sb>set voice to ( v)</sb>]]
+* [[Set Language to ()|<sb>set language to ( v)</sb>]]
+
+=== Translate Extension ===
+{{main|Translate Extension}}
+The Translate extension allows text to be translated to other languages. Scratch 3.0 has two Translate reporter blocks:
+* [[Translate () to ()|<sb>(translate () to ( v))</sb>]]
+* [[Language (block)|<sb>language</sb>]]
+
+=== Makey Makey Extension ===
+{{main|Makey Makey Extension}}
+The Makey Makey extension lets projects interact with the [[Makey Makey]]. Scratch 3.0 has two Makey Makey hat blocks:
+* [[When () Key Pressed (Makey Makey block)|<sb>when ( v) key pressed::makeymakey</sb>]]
+* [[When () Pressed in Order|<sb>when ( v) pressed in order</sb>]]
+
+=== micro:bit Extension ===
+{{main|micro:bit Extension}}
+The micro:bit extension lets projects interact with the [[micro:bit]]. There are 10 micro:bit blocks in Scratch 3.0.
+
+Scratch 3.0 has four micro:bit hat blocks, three stack blocks, two boolean blocks, and one reporter block:
+* [[When () Button Pressed|<sb>when ( v) button pressed</sb>]]
+* [[() Button Pressed?|<sb><( v) button pressed?></sb>]]
+* [[When () (micro:bit block)|<sb>when ( v)::microbit</sb>]]
+* [[File:Display () SVG.svg|132x132px|link=Display () (micro:bit block)]]
+* [[Display Text () (micro:bit block)|<sb>display text ()::microbit</sb>]]
+* [[Clear Display (micro:bit block)|<sb>clear display::microbit</sb>]]
+* [[When Tilted () (micro:bit block)|<sb>when tilted ( v)::microbit hat</sb>]]
+* [[Tilted ()? (micro:bit block)|<sb><tilted ( v)?::microbit></sb>]]
+* [[Tilt Angle () (micro:bit block)|<sb>tilt angle ( v)::microbit</sb>]]
+* [[When Pin () Connected|<sb>when pin ( v) connected</sb>]]
+
+=== Go Direct Force & Acceleration Extension ===
+{{main|Go Direct Force & Acceleration Extension}}
+The Go Direct Force & Acceleration Extension allows users to interact with the Go Direct force sensor.
+
+[[Scratch 3.0]] contains 4 Go Direct Force & Acceleration reporter blocks, three hat blocks, and two boolean blocks.
+
+* [[When () (Go Direct Force & Acceleration block)|<sb>when (shaken v)</sb>]]
+* [[When Force Sensor ()|<sb>when force sensor ( v)</sb>]]
+* [[Force|<sb>(force)</sb>]]
+* [[When Tilted () (Go Direct Force & Acceleration block)|<sb>when tilted ( v)::gdxfor</sb>]]
+* [[Tilted ()? (Go Direct Force & Acceleration block)|<sb><tilted ( v)?::gdxfor></sb>]]
+* [[Tilt Angle () (Go Direct Force & Acceleration block)|<sb>tilt angle ( v)::gdxfor</sb>]]
+* [[Falling?|<sb><falling?></sb>]]
+* [[Spin Speed ()|<sb>(spin speed ( v))</sb>]]
+* [[Acceleration ()|<sb>(acceleration ( v))</sb>]]
+
+=== LEGO MINDSTORMS EV3 Extension ===
+{{main|LEGO Mindstorms EV3 Extension}}
+The LEGO MINDSTORMS EV3 extension lets projects interact with the LEGO MINDSTORMS EV3. There are 11 EV3 blocks in Scratch 3.0.
+
+Scratch 3.0 has four EV3 stack blocks, three hat blocks, three reporter blocks, and one boolean block.
+* [[Motor () Turn This Way for () Seconds|<sb>motor ( v) turn this way for () seconds</sb>]]
+* [[Motor () Turn That Way for () Seconds|<sb>motor ( v) turn that way for () seconds</sb>]]
+* [[Motor () Set Power ()%|<sb>motor ( v) set power ()%</sb>]]
+* [[Motor () Position (LEGO MINDSTORMS EV3 block)|<sb>(motor ( v) position::ev3)</sb>]]
+* [[When Button () Pressed|<sb>when button ( v) pressed</sb>]]
+* [[When Distance is less than ()|<sb>when distance \<()</sb>]]
+* [[When Brightness is less than ()|<sb>when brightness \<()</sb>]]
+* [[Button () Pressed?|<sb><button ( v) pressed?::ev3></sb>]]
+* [[Distance (EV3 block)|<sb>distance::ev3</sb>]]
+* [[Brightness (EV3 block)|<sb>brightness::ev3</sb>]]
+* [[Beep Note () For () Secs|<sb>beep note () for () secs</sb>]]
+
+=== LEGO BOOST Extension ===
+{{main|LEGO BOOST Extension}}
+The LEGO BOOST extension lets projects interact with the LEGO BOOST. There are 12 LEGO BOOST blocks in Scratch 3.0.
+
+Scratch 3.0 has seven Lego BOOST stack blocks, two reporter blocks, two hat blocks, and one boolean block:
+* [[Turn Motor () for () Seconds|<sb>turn motor ( v) for () seconds</sb>]]
+* [[Turn Motor () for () Rotations|<sb>turn motor ( v) for () rotations</sb>]]
+* [[Turn Motor () On|<sb>turn motor ( v) on</sb>]]
+* [[Turn Motor () Off|<sb>turn motor ( v) off</sb>]]
+* [[Set Motor () Speed to ()%|<sb>set motor ( v) speed to ()%</sb>]]
+* [[Set Motor () Direction ()|<sb>set motor ( v) direction ( v)</sb>]]
+* [[Motor () Position (LEGO BOOST block)|<sb>motor ( v) position::boost</sb>]]
+* [[When () Brick Seen|<sb>when ( v) brick seen</sb>]]
+* [[Seeing () Brick?|<sb>seeing ( v) brick?</sb>]]
+* [[When Tilted () (LEGO BOOST block)|<sb>when tilted ( v)::boost</sb>]]
+* [[Tilt Angle () (LEGO BOOST block)|<sb>tilt angle ( v)::boost</sb>]]
+* [[Set Light Color to () (LEGO BOOST block)|<sb>set light color to ()::boost</sb>]]
+
+=== LEGO Education WeDo 2.0 Extension ===
+{{main|LEGO Education WeDo 2.0 Extension}}
+The Lego Education WeDo 2.0 extension lets projects interact with the LEGO WeDo Construction Set. There are 11 blocks in Scratch 3.0.
+
+Scratch 3.0 contains six Lego Education WeDo 2.0 stack blocks, two hat blocks, two reporter blocks, and one boolean block:
+
+* [[Turn () On for () Seconds|<sb>turn ( v) on for () seconds</sb>]]
+* [[Turn () On|<sb>turn ( v) on</sb>]]
+* [[Turn () Off|<sb>turn ( v) off</sb>]]
+* [[Set () Power to ()|<sb>set ( v) power to ()</sb>]]
+* [[Set () Direction to ()|<sb>set ( v) direction to ( v)</sb>]]
+* [[Set Light Color to () (LEGO Education WeDo 2.0 block)|<sb>set light color to ()</sb>]]
+* [[When Distance () ()|<sb>when distance ( v) ()</sb>]]
+* [[When Tilted () (LEGO Education WeDo 2.0 block)|<sb>when tilted ( v)::wedo</sb>]]
+* [[Distance (LEGO Education WeDo 2.0 block)|<sb>distance::wedo</sb>]]
+* [[Tilted ()? (LEGO Education WeDo 2.0 block)|<sb>tilted ( v)?::wedo</sb>]]
+* [[Tilt Angle () (LEGO Education WeDo 2.0 block)|<sb>tilt angle ( v)::wedo</sb>]]
+
+=== Raspberry Pi Only Extensions ===
+{{Raspberry Pi Feature}}{{main|Raspberry Pi}}
+There are also three extensions that are only available on the Raspberry Pi version of Scratch.
+
+==== Raspberry Pi GPIO Extension ====
+{{main|Raspberry Pi GPIO Extension}}
+[[Scratch 3.0]] contains 2 Raspberry Pi GPIO stack blocks, one hat block, and one boolean block.
+* [[When GPIO () is ()|<sb>when gpio (0 v) is [high v]:: extension hat</sb>]]
+* [[GPIO () is ()?|<sb><gpio (0 v) is [high v]?:: extension></sb>]]
+* [[Set GPIO () to Output ()|<sb>set gpio (0 v) to output [high v]:: extension</sb>]]
+* [[Set GPIO () to Input ()|<sb>set gpio (0 v) to input [pulled high v]:: extension</sb>]]
+
+==== Raspberry Pi Sense HAT Extension ====
+{{main|Raspberry Pi Sense HAT Extension}}
+[[Scratch 3.0]] contains ten Raspberry Pi Sense HAT stack blocks, three hat blocks, one boolean block, and six reporter blocks.
+* [[Display Text () (Raspberry Pi Sense HAT block)|<sb>display text [Hello!]:: extension</sb>]]
+* [[Display Character ()|<sb>display character [A]:: extension</sb>]]
+* {{nbsp}}[[File:Display () Sense HAT.png|link=Display () (Raspberry Pi Sense HAT block)|121x121px]]
+* [[Display Sprite|<sb>display sprite:: extension</sb>]]
+* [[Display Stage|<sb>display stage:: extension</sb>]]
+* [[Clear Display (Raspberry Pi Sense HAT block)|<sb>clear display:: extension</sb>]]
+* [[Set Colour to ()|<sb>set colour to [#2d184f]:: extension</sb>]] <!--- not necessarily the exact same shade, just looks similar enough -->
+* [[Set Background to ()|<sb>set background to [#4160b5]:: extension</sb>]]
+* [[Set Pixel X () Y () to ()|<sb>set pixel x (0 v) y (0 v) to [#5eb87c]:: extension</sb>]]
+* [[Set Rotation to () Degrees|<sb>set rotation to [0 v] degrees:: extension</sb>]]
+* [[When Joystick Pushed ()|<sb>when joystick pushed [up v]:: extension hat</sb>]]
+* [[Joystick Pushed ()?|<sb><joystick pushed [up v]?:: extension></sb>]]
+* [[When Shaken|<sb>when shaken:: extension hat</sb>]]
+* [[When Tilted () (Raspberry Pi Sense HAT block)|<sb>when tilted [forward v]:: extension hat</sb>]]
+* [[Temperature|<sb>(temperature:: extension)</sb>]]
+* [[Pressure|<sb>(pressure:: extension)</sb>]]
+* [[Humidity|<sb>(humidity:: extension</sb>]]
+* [[Roll|<sb>(roll:: extension)</sb>]]
+* [[Pitch|<sb>(pitch:: extension)</sb>]]
+* [[Yaw|<sb>(yaw:: extension)</sb>]]
+
+==== Raspberry Pi Simple Electronics Extension ====
+{{main|Raspberry Pi Simple Electronics Extension}}
+[[Scratch 3.0]] contains two Raspberry Pi Simple Electronics stack blocks, one boolean block, and one hat block.
+* [[When Button () is ()|<sb>when button (0 v) is [pressed v]:: extension hat</sb>]]
+* [[Button () is ()?|<sb><button (0 v) is [pressed v]?:: extension></sb>]]
+* [[Turn LED () ()|<sb>turn LED (0 v) [on v]:: extension</sb>]]
+* [[Toggle LED ()|<sb>toggle LED (0 v):: extension</sb>]]
+
+== Scratch Block Plugin ==
+{{main|Block Plugin}}
+The Block Plugin allows one to write blocks and scripts to appear on the [[Scratch Discussion Forums|Scratch Forums]] and [[Scratch Wiki]], as well as other websites with the included JavaScript. It is written by the [[Scratcher]] blob8108. The dedicated forum topic for testing this plugin out can be found [[topic:741323|here]].
+
+== In Other Programming Languages ==
+Scratch is one of the original languages ever to use blocks, inspiring other languages to inherit the idea. [[Scratch Modification|Scratch modifications]] contain many new blocks typically that are not present in Scratch. [[MIT]], where Scratch is made, has also created other languages using blocks such as the [http://appinventor.mit.edu/explore/ MIT App Inventor]. [http://www.stencyl.com Stencyl] is a highly-professional language that features an entire block interface for programming real-time apps and online games. [[ScratchJr]] also has blocks which are even more friendly for younger children to understand.
+
+== See Also ==
+* [[Edit Block Colors]]
+
+{{Scratch Blocks}}
+{{Block Shapes}}
+[[Category:Project Items]]
+[[Category:Blocks]]
+[[Category:Lists]]
+<!-- Interwiki -->
+[[fr:Catégorie:Blocs]]
+[[de:Alle Blöcke = Übersichts-Liste]]
+[[ja:ブロック]]
+[[ru:Блок]]
+[[id:Balok]]
+[[nl:Scratch blokken]]
+[[es:Bloques]]
+[[pt:Blocos]]
+[[tr:Bloklar]]
+[[zh:积木]]
+[[ko:블록]]
+[[uk:Блок]]
+[[sq:Kuba]]
+[[gu:બ્લોક્સ]]

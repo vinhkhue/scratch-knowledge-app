@@ -1,0 +1,268 @@
+"""
+GraphRAG Query Module for Scratch Knowledge Graph App
+"""
+import pandas as pd
+import asyncio
+from pathlib import Path
+from typing import Optional, Tuple, Dict, Any
+import logging
+
+from config import (
+    GRAPHRAG_OUTPUT_DIR,
+    GRAPHRAG_CONFIG_FILE,
+    ENTITIES_FILE,
+    RELATIONSHIPS_FILE,
+    COMMUNITIES_FILE,
+    COMMUNITY_REPORTS_FILE,
+    TEXT_UNITS_FILE,
+    DEFAULT_COMMUNITY_LEVEL,
+    DEFAULT_RESPONSE_TYPE,
+    MIN_RESPONSE_LENGTH
+)
+
+logger = logging.getLogger(__name__)
+
+class GraphRAGQuery:
+    """GraphRAG query handler"""
+    
+    def __init__(self):
+        self.entities = pd.DataFrame()
+        self.relationships = pd.DataFrame()
+        self.communities = pd.DataFrame()
+        self.community_reports = pd.DataFrame()
+        self.text_units = pd.DataFrame()
+        self.config = None
+        self._load_data()
+    
+    def _load_data(self):
+        """Load parquet files and config"""
+        try:
+            # Load parquet files if they exist
+            if ENTITIES_FILE.exists():
+                self.entities = pd.read_parquet(ENTITIES_FILE)
+                logger.info(f"Loaded {len(self.entities)} entities")
+            
+            if RELATIONSHIPS_FILE.exists():
+                self.relationships = pd.read_parquet(RELATIONSHIPS_FILE)
+                logger.info(f"Loaded {len(self.relationships)} relationships")
+            
+            if COMMUNITIES_FILE.exists():
+                self.communities = pd.read_parquet(COMMUNITIES_FILE)
+                logger.info(f"Loaded {len(self.communities)} communities")
+            
+            if COMMUNITY_REPORTS_FILE.exists():
+                self.community_reports = pd.read_parquet(COMMUNITY_REPORTS_FILE)
+                logger.info(f"Loaded {len(self.community_reports)} community reports")
+            
+            if TEXT_UNITS_FILE.exists():
+                self.text_units = pd.read_parquet(TEXT_UNITS_FILE)
+                logger.info(f"Loaded {len(self.text_units)} text units")
+            
+            # Load config
+            if GRAPHRAG_CONFIG_FILE.exists():
+                try:
+                    from graphrag.config import GraphRagConfig
+                    self.config = GraphRagConfig.from_yaml(str(GRAPHRAG_CONFIG_FILE))
+                except ImportError:
+                    logger.warning("GraphRAG not available, using mock config")
+                    self.config = None
+            
+        except Exception as e:
+            logger.error(f"Error loading GraphRAG data: {e}")
+            self._create_mock_data()
+    
+    def _create_mock_data(self):
+        """Create mock data for testing when parquet files don't exist"""
+        logger.info("Creating mock GraphRAG data for testing")
+        
+        # Mock entities
+        self.entities = pd.DataFrame({
+            'id': ['e1', 'e2', 'e3', 'e4', 'e5'],
+            'title': ['Scratch', 'Lập trình', 'Khối lệnh', 'Sprite', 'Sân khấu'],
+            'description': [
+                'Ngôn ngữ lập trình trực quan',
+                'Quá trình tạo ra chương trình máy tính',
+                'Các khối lệnh để điều khiển sprite',
+                'Nhân vật hoạt động trong Scratch',
+                'Không gian làm việc chính'
+            ],
+            'text_unit_ids': [
+                ['t1', 't2'], ['t1', 't3'], ['t2', 't4'], ['t3', 't5'], ['t4', 't5']
+            ]
+        })
+        
+        # Mock relationships
+        self.relationships = pd.DataFrame({
+            'id': ['r1', 'r2', 'r3', 'r4'],
+            'source': ['e1', 'e2', 'e3', 'e4'],
+            'target': ['e2', 'e3', 'e4', 'e5'],
+            'description': [
+                'Scratch được dùng để lập trình',
+                'Lập trình sử dụng khối lệnh',
+                'Khối lệnh điều khiển sprite',
+                'Sprite hoạt động trên sân khấu'
+            ],
+            'weight': [0.9, 0.8, 0.7, 0.6],
+            'text_unit_ids': [
+                ['t1'], ['t2'], ['t3'], ['t4']
+            ]
+        })
+        
+        # Mock communities
+        self.communities = pd.DataFrame({
+            'id': ['c1', 'c2'],
+            'level': [1, 2],
+            'entities': [
+                ['e1', 'e2'], ['e3', 'e4', 'e5']
+            ]
+        })
+        
+        # Mock community reports
+        self.community_reports = pd.DataFrame({
+            'id': ['cr1', 'cr2'],
+            'community_id': ['c1', 'c2'],
+            'level': [1, 2],
+            'summary': [
+                'Các khái niệm cơ bản về Scratch và lập trình',
+                'Các thành phần chính trong Scratch: khối lệnh, sprite, sân khấu'
+            ],
+            'entities': [
+                ['e1', 'e2'], ['e3', 'e4', 'e5']
+            ]
+        })
+        
+        # Mock text units
+        self.text_units = pd.DataFrame({
+            'id': ['t1', 't2', 't3', 't4', 't5'],
+            'text': [
+                'Scratch là ngôn ngữ lập trình trực quan',
+                'Lập trình là quá trình tạo ra chương trình máy tính',
+                'Khối lệnh được dùng để điều khiển sprite',
+                'Sprite là nhân vật hoạt động trong Scratch',
+                'Sân khấu là không gian làm việc chính'
+            ],
+            'title': [
+                'Giới thiệu Scratch', 'Khái niệm lập trình', 'Khối lệnh',
+                'Sprite', 'Sân khấu'
+            ]
+        })
+    
+    async def local_search(self, query: str) -> Tuple[str, Dict[str, Any]]:
+        """Perform local search using GraphRAG"""
+        try:
+            if self.config is None:
+                # Use mock search
+                return await self._mock_search(query, "local")
+            
+            # Import GraphRAG API
+            from graphrag.api import local_search
+            
+            response, context_data = await local_search(
+                config=self.config,
+                entities=self.entities,
+                communities=self.communities,
+                community_reports=self.community_reports,
+                text_units=self.text_units,
+                relationships=self.relationships,
+                covariates=None,
+                community_level=DEFAULT_COMMUNITY_LEVEL,
+                response_type=DEFAULT_RESPONSE_TYPE,
+                query=query
+            )
+            
+            return response, context_data
+            
+        except Exception as e:
+            logger.error(f"Error in local search: {e}")
+            return await self._mock_search(query, "local")
+    
+    async def global_search(self, query: str) -> Tuple[str, Dict[str, Any]]:
+        """Perform global search using GraphRAG"""
+        try:
+            if self.config is None:
+                # Use mock search
+                return await self._mock_search(query, "global")
+            
+            # Import GraphRAG API
+            from graphrag.api import global_search
+            
+            response, context_data = await global_search(
+                config=self.config,
+                entities=self.entities,
+                communities=self.communities,
+                community_reports=self.community_reports,
+                community_level=DEFAULT_COMMUNITY_LEVEL,
+                dynamic_community_selection=True,
+                response_type=DEFAULT_RESPONSE_TYPE,
+                query=query
+            )
+            
+            return response, context_data
+            
+        except Exception as e:
+            logger.error(f"Error in global search: {e}")
+            return await self._mock_search(query, "global")
+    
+    async def _mock_search(self, query: str, search_type: str) -> Tuple[str, Dict[str, Any]]:
+        """Mock search for testing when GraphRAG is not available"""
+        # Simple keyword matching for mock responses
+        query_lower = query.lower()
+        
+        # Find relevant entities
+        relevant_entities = []
+        for _, entity in self.entities.iterrows():
+            if any(keyword in entity['title'].lower() or keyword in entity['description'].lower() 
+                   for keyword in query_lower.split()):
+                relevant_entities.append(entity)
+        
+        # Find relevant relationships
+        relevant_relationships = []
+        for _, rel in self.relationships.iterrows():
+            if any(keyword in rel['description'].lower() for keyword in query_lower.split()):
+                relevant_relationships.append(rel)
+        
+        # Generate mock response
+        if relevant_entities:
+            response = f"Dựa trên kiến thức về Scratch, đây là câu trả lời cho câu hỏi '{query}':\n\n"
+            for entity in relevant_entities[:3]:  # Limit to 3 entities
+                response += f"• {entity['title']}: {entity['description']}\n"
+            
+            if relevant_relationships:
+                response += "\nCác mối quan hệ liên quan:\n"
+                for rel in relevant_relationships[:2]:  # Limit to 2 relationships
+                    response += f"• {rel['description']}\n"
+        else:
+            response = f"Không tìm thấy thông tin cụ thể về '{query}' trong cơ sở dữ liệu kiến thức Scratch."
+        
+        # Create context data for visualization
+        context_data = {
+            'entities': pd.DataFrame(relevant_entities) if relevant_entities else pd.DataFrame(),
+            'relationships': pd.DataFrame(relevant_relationships) if relevant_relationships else pd.DataFrame(),
+            'search_type': search_type
+        }
+        
+        return response, context_data
+    
+    def is_response_valid(self, response: str) -> bool:
+        """Check if response is valid and meaningful"""
+        if not response or len(response.strip()) < MIN_RESPONSE_LENGTH:
+            return False
+        
+        # Check for common error patterns
+        error_patterns = [
+            "không tìm thấy",
+            "không có thông tin",
+            "error",
+            "exception",
+            "failed"
+        ]
+        
+        response_lower = response.lower()
+        for pattern in error_patterns:
+            if pattern in response_lower:
+                return False
+        
+        return True
+
+# Global instance
+graphrag_query = GraphRAGQuery()
